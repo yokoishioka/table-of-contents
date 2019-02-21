@@ -1,0 +1,46 @@
+/* TABLE OF CONTENTS */
+/* By Yoko Ishioka */
+/* https://yokoishioka.com */
+/* Web Engineer */
+		
+/* create dynamic table of contents */
+var last;
+/* add a table of contents header if there's a class called "table_of_contents" */
+$('.table_of_contents').append("<h2>Table of Contents</h2> \n ");
+
+/* give each topic/subtopic an id attribute */
+$('.topic, .subtopic').each(function() {
+
+    var value = $(this).html();
+    var thisClass = $(this).attr("class");
+
+    /* 1) make string all lowercase and replace spaces with underscores so the terms don't break */
+    var valueDictionary = value.toLowerCase();
+    valueDictionary = valueDictionary.replace(/\s+/g, '_');
+    valueDictionary = valueDictionary.replace(/[^a-zA-Z0-9_]/g, '');
+
+    /* add Back-to-Top link */
+    $(this).append(" | <a href='#masthead'>Back to Top</a>");
+
+    /* give each topic and subtopic an id of its value */
+    $(this).attr("id", valueDictionary);
+
+    /* if the element has the "topic" class, hyperlink it with its value and note that the last element is a "topic" */ 
+    if (thisClass == 'topic') {
+
+        $('.table_of_contents').append("<p><a href='#" + valueDictionary + "'>" + value + "</a></p>");
+
+        last = "topic";
+    }
+    /* if the element has the "subtopic" class, make it into an unordered list, start a new section only if the last element was "topic", otherwise add it as a bullet */
+    else if (thisClass == 'subtopic'){
+      if (last == "topic") {
+      $('.table_of_contents').append("<div class='section'><li><a href='#" + valueDictionary + "'>" + value + "</a></li>");
+      }
+      else {
+        $('.table_of_contents').append("<li><a href='#" + valueDictionary + "'>" + value + "</a></li>");
+      }
+      last = "subtopic";
+    }
+
+});
